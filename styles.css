@@ -1,0 +1,676 @@
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;700&family=ZCOOL+XiaoWei&display=swap');
+
+:root {
+    --blood-red: #8B0000;
+    --dark-red: #4A0000;
+    --ghost-white: rgba(255, 255, 255, 0.9);
+    --shadow-black: #0a0a0a;
+    --bone-white: #e8e4d9;
+    --fog-gray: #3a3a3a;
+    --blood-glow: rgba(139, 0, 0, 0.6);
+    --green-fire: #2d5a27;
+    --candle-glow: rgba(255, 140, 0, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    background-color: #000;
+    color: var(--ghost-white);
+    min-height: 100vh;
+    overflow: hidden;
+    cursor: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text y="18" font-size="18">🕯️</text></svg>'), auto;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+}
+
+#atmosphere-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(20, 20, 30, 0.8) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(40, 10, 10, 0.4) 0%, transparent 40%),
+        radial-gradient(ellipse at 80% 60%, rgba(30, 30, 50, 0.3) 0%, transparent 40%);
+    pointer-events: none;
+    animation: fogMove 20s ease-in-out infinite;
+}
+
+@keyframes fogMove {
+    0%, 100% { transform: translateX(0) scale(1); }
+    25% { transform: translateX(-20px) scale(1.02); }
+    50% { transform: translateX(10px) scale(0.98); }
+    75% { transform: translateX(-10px) scale(1.01); }
+}
+
+#vignette {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.8) 100%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+#screen-flicker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    pointer-events: none;
+    z-index: 11;
+    animation: flicker 0.15s infinite;
+    opacity: 0;
+}
+
+@keyframes flicker {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.03; background: rgba(255, 255, 255, 0.02); }
+}
+
+#title-screen {
+    background:
+        linear-gradient(180deg, #0a0a0a 0%, #1a0a0a 50%, #0a0a0a 100%),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="50" opacity="0.03">🏚️</text></svg>');
+    justify-content: center;
+    align-items: center;
+}
+
+.title-content {
+    text-align: center;
+    position: relative;
+    z-index: 5;
+}
+
+.game-title {
+    font-family: 'ZCOOL XiaoWei', 'SimHei', serif;
+    font-size: 4.5rem;
+    color: var(--blood-red);
+    text-shadow:
+        0 0 20px var(--blood-glow),
+        0 0 40px rgba(139, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.8);
+    animation: titlePulse 3s ease-in-out infinite;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.3rem;
+}
+
+@keyframes titlePulse {
+    0%, 100% { text-shadow: 0 0 20px var(--blood-glow), 0 0 40px rgba(139, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.8); }
+    50% { text-shadow: 0 0 30px var(--blood-glow), 0 0 60px rgba(139, 0, 0, 0.6), 0 4px 8px rgba(0, 0, 0, 0.8); }
+}
+
+.subtitle {
+    font-family: 'Ma Shan Zheng', cursive;
+    font-size: 2rem;
+    color: var(--bone-white);
+    opacity: 0.7;
+    margin-bottom: 3rem;
+    letter-spacing: 1rem;
+}
+
+.candle {
+    position: absolute;
+    width: 60px;
+    height: 120px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.candle::before {
+    content: '🕯️';
+    font-size: 3rem;
+    position: absolute;
+    top: 0;
+    animation: candleFlicker 0.5s ease-in-out infinite alternate;
+}
+
+.candle::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, var(--candle-glow) 0%, transparent 70%);
+    animation: glowPulse 1s ease-in-out infinite;
+}
+
+.candle.left { left: 10%; }
+.candle.right { right: 10%; }
+
+@keyframes candleFlicker {
+    0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+    100% { transform: scale(1.05) rotate(2deg); opacity: 1; }
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.8; transform: translateX(-50%) scale(1.1); }
+}
+
+.letter-preview {
+    perspective: 1000px;
+    margin-bottom: 3rem;
+}
+
+.letter {
+    background: linear-gradient(135deg, #d4c4a8 0%, #c9b896 50%, #bfad84 100%);
+    padding: 2rem;
+    border-radius: 4px;
+    max-width: 400px;
+    margin: 0 auto;
+    transform: rotateX(5deg);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(139, 0, 0, 0.1);
+    color: #2a1a0a;
+    font-style: italic;
+    position: relative;
+    animation: letterFloat 4s ease-in-out infinite;
+}
+
+.letter::before {
+    content: '📜';
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5rem;
+    opacity: 0.7;
+}
+
+@keyframes letterFloat {
+    0%, 100% { transform: rotateX(5deg) translateY(0); }
+    50% { transform: rotateX(8deg) translateY(-10px); }
+}
+
+.letter .signature {
+    text-align: right;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+.start-btn, .restart-btn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    background: linear-gradient(180deg, #3a0000 0%, #1a0000 100%);
+    border: 2px solid var(--blood-red);
+    color: var(--bone-white);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-radius: 4px;
+}
+
+.start-btn:hover, .restart-btn:hover {
+    background: linear-gradient(180deg, #5a0000 0%, #2a0000 100%);
+    box-shadow: 0 0 30px var(--blood-glow);
+    transform: scale(1.05);
+}
+
+.btn-glow {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: btnSweep 2s ease-in-out infinite;
+}
+
+@keyframes btnSweep {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+#scene-screen {
+    background: linear-gradient(180deg, #050505 0%, #0f0808 50%, #050505 100%);
+    flex-direction: column;
+    padding: 2rem;
+}
+
+.scene-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 5;
+}
+
+.scene-badge {
+    display: inline-block;
+    background: rgba(139, 0, 0, 0.3);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--blood-red);
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(139, 0, 0, 0.3); }
+    50% { box-shadow: 0 0 20px rgba(139, 0, 0, 0.6); }
+}
+
+.scene-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 2.5rem;
+    color: var(--blood-red);
+    text-shadow: 0 0 20px var(--blood-glow);
+}
+
+.scene-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 5;
+}
+
+.scene-text {
+    background: rgba(10, 10, 10, 0.8);
+    padding: 2rem;
+    border-radius: 8px;
+    border: 1px solid rgba(139, 0, 0, 0.3);
+    margin-bottom: 2rem;
+    line-height: 2;
+    font-size: 1.15rem;
+    color: var(--bone-white);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    animation: textAppear 0.8s ease-out;
+}
+
+@keyframes textAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+        filter: blur(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+.scene-text p {
+    margin-bottom: 1rem;
+}
+
+.scene-text p:last-child {
+    margin-bottom: 0;
+}
+
+.choices {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.choice-btn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(90deg, rgba(30, 0, 0, 0.9) 0%, rgba(20, 0, 0, 0.95) 100%);
+    border: 1px solid rgba(139, 0, 0, 0.5);
+    color: var(--ghost-white);
+    cursor: pointer;
+    text-align: left;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: choiceSlideIn 0.5s ease-out backwards;
+}
+
+.choice-btn:nth-child(1) { animation-delay: 0.2s; }
+.choice-btn:nth-child(2) { animation-delay: 0.35s; }
+.choice-btn:nth-child(3) { animation-delay: 0.5s; }
+.choice-btn:nth-child(4) { animation-delay: 0.65s; }
+
+@keyframes choiceSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.choice-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--blood-red);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.choice-btn:hover {
+    background: linear-gradient(90deg, rgba(60, 0, 0, 0.9) 0%, rgba(40, 0, 0, 0.95) 100%);
+    border-color: var(--blood-red);
+    padding-left: 2rem;
+    box-shadow:
+        0 0 20px rgba(139, 0, 0, 0.4),
+        inset 0 0 20px rgba(139, 0, 0, 0.1);
+    transform: translateX(5px);
+}
+
+.choice-btn:hover::before {
+    transform: scaleY(1);
+}
+
+.choice-btn:active {
+    transform: scale(0.98) translateX(5px);
+}
+
+.transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#ending-screen {
+    background: linear-gradient(180deg, #0a0000 0%, #150505 50%, #0a0000 100%);
+    justify-content: center;
+    align-items: center;
+}
+
+.ending-content {
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    animation: endingAppear 1.5s ease-out;
+}
+
+@keyframes endingAppear {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+        filter: blur(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+.skull-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: skullFloat 3s ease-in-out infinite;
+}
+
+@keyframes skullFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+.ending-number {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 1.5rem;
+    color: var(--blood-red);
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+}
+
+.ending-title {
+    font-family: 'ZCOOL XiaoWei', serif;
+    font-size: 3rem;
+    color: var(--bone-white);
+    text-shadow: 0 0 30px var(--blood-glow);
+    margin-bottom: 1.5rem;
+}
+
+.ending-description {
+    font-size: 1.2rem;
+    color: rgba(232, 228, 217, 0.8);
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.8;
+}
+
+.ending-stats {
+    color: rgba(139, 0, 0, 0.7);
+    font-size: 1rem;
+    margin-bottom: 2rem;
+}
+
+.restart-btn {
+    animation: restartPulse 2s ease-in-out infinite;
+}
+
+@keyframes restartPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(139, 0, 0, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(139, 0, 0, 0.6); }
+}
+
+#audio-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.audio-btn {
+    font-size: 1.5rem;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--blood-red);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--bone-white);
+}
+
+.audio-btn:hover {
+    background: rgba(139, 0, 0, 0.5);
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+        letter-spacing: 0.5rem;
+    }
+
+    .candle {
+        display: none;
+    }
+
+    .scene-title {
+        font-size: 1.8rem;
+    }
+
+    .scene-text {
+        padding: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .choice-btn {
+        font-size: 1rem;
+        padding: 1.2rem 1rem;
+        min-height: 60px;
+        border-radius: 8px;
+    }
+
+    .ending-title {
+        font-size: 2rem;
+    }
+
+    .ending-description {
+        font-size: 1.1rem;
+        padding: 0 1rem;
+    }
+
+    .start-btn, .restart-btn {
+        font-size: 1.2rem;
+        padding: 1.2rem 2.5rem;
+        min-height: 60px;
+    }
+
+    .audio-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+
+    #audio-controls {
+        bottom: 30px;
+        right: 30px;
+    }
+
+    .scene-content {
+        padding: 0 1rem;
+    }
+
+    .choices {
+        gap: 0.8rem;
+    }
+}
+
+.blood-drip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+    overflow: hidden;
+}
+
+.blood-drip::before,
+.blood-drip::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 100px;
+    background: linear-gradient(180deg, transparent 0%, var(--blood-red) 30%, var(--blood-red) 100%);
+    animation: bloodDrip 8s linear infinite;
+}
+
+.blood-drip::before {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.blood-drip::after {
+    right: 30%;
+    animation-delay: 4s;
+}
+
+@keyframes bloodDrip {
+    0% { top: -100px; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+.jumpscare-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+}
+
+.jumpscare-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.jumpscare-overlay .face {
+    font-size: 20rem;
+    animation: jumpscareShake 0.1s linear infinite;
+}
+
+@keyframes jumpscareShake {
+    0%, 100% { transform: translate(0, 0) rotate(0); }
+    25% { transform: translate(-10px, 10px) rotate(-5deg); }
+    50% { transform: translate(10px, -10px) rotate(5deg); }
+    75% { transform: translate(-10px, -10px) rotate(-5deg); }
+}

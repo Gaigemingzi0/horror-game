@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>噬魂庄园：暗影低语</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="atmosphere-layer"></div>
+        <div id="vignette"></div>
+        <div id="screen-flicker"></div>
+
+        <div id="title-screen" class="screen active">
+            <div class="title-content">
+                <div class="candle left"></div>
+                <div class="candle right"></div>
+                <h1 class="game-title">🕯️ 噬魂庄园</h1>
+                <p class="subtitle">暗影低语</p>
+                <div class="letter-preview">
+                    <div class="letter">
+                        <p>回来……它在等你。</p>
+                        <p>庄园的秘密，今夜必须终结。</p>
+                        <p class="signature">—— 你的哥哥</p>
+                    </div>
+                </div>
+                <button class="start-btn" onclick="game.start()">
+                    <span>打开庄园大门</span>
+                    <div class="btn-glow"></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="scene-screen" class="screen">
+            <div class="scene-header">
+                <span id="scene-badge" class="scene-badge"></span>
+                <h2 id="scene-title" class="scene-title"></h2>
+            </div>
+            <div id="scene-content" class="scene-content">
+                <div id="scene-text" class="scene-text"></div>
+                <div id="choices-container" class="choices"></div>
+            </div>
+            <div id="transition-overlay" class="transition-overlay"></div>
+        </div>
+
+        <div id="ending-screen" class="screen">
+            <div class="ending-content">
+                <div class="skull-icon">💀</div>
+                <h2 id="ending-number" class="ending-number"></h2>
+                <h3 id="ending-title" class="ending-title"></h3>
+                <p id="ending-description" class="ending-description"></p>
+                <div class="ending-stats">
+                    <p>结局 <span id="ending-count">1</span> / 21</p>
+                </div>
+                <button class="restart-btn" onclick="game.restart()">
+                    <span>重返庄园</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="audio-controls">
+            <button id="mute-btn" class="audio-btn" onclick="game.toggleAudio()">🔊</button>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
